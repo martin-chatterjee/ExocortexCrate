@@ -1,6 +1,6 @@
 //-*****************************************************************************
 //
-// Copyright (c) 2009-2012,
+// Copyright (c) 2009-2014,
 //  Sony Pictures Imageworks, Inc. and
 //  Industrial Light & Magic, a division of Lucasfilm Entertainment Company Ltd.
 //
@@ -44,6 +44,9 @@ namespace AbcOpenGL {
 namespace ABCOPENGL_VERSION_NS {
 
 //-*****************************************************************************
+void drawBoundingBox( const Box3d bounds, const int mode = GL_LINES );
+
+//-*****************************************************************************
 //! \brief Both the SubD and PolyMesh classes draw in the same way, so we
 //! create this helper class to do the common work.
 class MeshDrwHelper : private Alembic::Util::noncopyable
@@ -74,10 +77,16 @@ public:
     // This returns validity.
     bool valid() const { return m_valid; }
 
+    // This returns constancy.
+    bool isConstant() const { return m_isConstant; }
+    void setConstant( bool isConstant = true ) { m_isConstant = isConstant; }
+
     // Return the bounds.
     Box3d getBounds() const { return m_bounds; }
 
     // And, finally, this draws.
+    //static void drawBounds( const Box3d bounds, const C3f *color = NULL );
+    void drawBounds( const DrawContext & iCtx ) const;
     void draw( const DrawContext & iCtx ) const;
 
     // This is a weird thing. Just makes the helper invalid
@@ -98,6 +107,7 @@ protected:
     std::vector<V3f> m_customN;
 
     bool m_valid;
+    bool m_isConstant;
 
     Box3d m_bounds;
 

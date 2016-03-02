@@ -36,22 +36,13 @@
 #include <Alembic/Ogawa/OStream.h>
 #include <fstream>
 #include <stdexcept>
-#include <sstream>
-
-//#define ESS_LOG_ERROR(a) do { std::stringstream __s; __s << "Alembic: " << a << std::endl; OutputDebugString( __s.str().c_str() ); } while(0)
-
-#define STREAM_BUF_SIZE (1024*16)
 
 namespace Alembic {
 namespace Ogawa {
 namespace ALEMBIC_VERSION_NS {
 
- 
 class OStream::PrivateData
 {
-private:
-    char filestreamBuffer[STREAM_BUF_SIZE];
-
 public:
     PrivateData(const std::string & iFileName) :
         stream(NULL), fileName(iFileName), startPos(0)
@@ -61,7 +52,6 @@ public:
         if (filestream->is_open())
         {
             stream = filestream;
-            stream->rdbuf()->pubsetbuf( filestreamBuffer, STREAM_BUF_SIZE );
             stream->exceptions ( std::ofstream::failbit |
                                  std::ofstream::badbit );
         }
@@ -168,11 +158,10 @@ Alembic::Util::uint64_t OStream::getAndSeekEndPos()
         Alembic::Util::scoped_lock l(mData->lock);
         Alembic::Util::uint64_t lastp =
             mData->stream->seekp(0, std::ios_base::end).tellp();
-
         if (lastp == INVALID_DATA || lastp < mData->startPos)
         {
             throw std::runtime_error(
-                "Illegal position returned Ogawa::OStream::getAndSeekEndPos"); 
+                "Illegal position returned Ogawa::OStream::getAndSeekEndPos");
 
             return 0;
         }

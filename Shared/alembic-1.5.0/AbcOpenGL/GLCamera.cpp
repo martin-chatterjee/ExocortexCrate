@@ -1,6 +1,6 @@
 //-*****************************************************************************
 //
-// Copyright (c) 2009-2012,
+// Copyright (c) 2009-2014,
 //  Sony Pictures Imageworks, Inc. and
 //  Industrial Light & Magic, a division of Lucasfilm Entertainment Company Ltd.
 //
@@ -121,7 +121,10 @@ void GLCamera::autoSetClippingPlanes( const Box3d &bounds )
     clipNear = clamp( clipNear, 0.1, 100000.0 );
     clipFar = clamp( clipFar, 0.1, 100000.0 );
 
-    assert( clipFar > clipNear );
+    if ( clipFar <= clipNear )
+    {
+        clipFar = clipNear + 0.1;
+    }
 
     m_clip[0] = clipNear;
     m_clip[1] = clipFar;
@@ -160,9 +163,14 @@ void GLCamera::apply() const
     glLoadIdentity();
 
     ::glScaled( 1.0 / m_scale[0], 1.0 / m_scale[1], 1.0 / m_scale[2] );
-    ::glRotated( -m_rotation[2], 0.0, 0.0, 1.0 );
+
+    // Apply rotation in XYZ order. XformSample::getXRotation etc extract
+    // the rotation values out of the xform matrix using XYZ rotation.
+    // TODO: revisit using a xform matrix here instead.
     ::glRotated( -m_rotation[0], 1.0, 0.0, 0.0 );
     ::glRotated( -m_rotation[1], 0.0, 1.0, 0.0 );
+    ::glRotated( -m_rotation[2], 0.0, 0.0, 1.0 );
+
     ::glTranslated( -m_translation[0], -m_translation[1], -m_translation[2] );
 }
 
@@ -178,11 +186,11 @@ M44d GLCamera::transform() const
                        1.0 / m_scale[2] )  );
     m = m * tmp;
 
-    tmp.setAxisAngle( V3d( 0.0, 0.0, 1.0 ), radians( -m_rotation[2] ) );
-    m = m * tmp;
     tmp.setAxisAngle( V3d( 1.0, 0.0, 0.0 ), radians( -m_rotation[0] ) );
     m = m * tmp;
     tmp.setAxisAngle( V3d( 0.0, 1.0, 0.0 ), radians( -m_rotation[1] ) );
+    m = m * tmp;
+    tmp.setAxisAngle( V3d( 0.0, 0.0, 1.0 ), radians( -m_rotation[2] ) );
     m = m * tmp;
 
     tmp.setTranslation( V3d( -m_translation[0],
@@ -239,7 +247,15 @@ void GLCamera::dolly( const V2d &point,
     // Magic dolly function
     double dollyBy = 1.0 - expf( -dollySpeed * t );
 
-    assert( fabsf( dollyBy ) < 1.0 );
+    if (dollyBy > 1.0)
+    {
+        dollyBy = 1.0;
+    }
+    else if (dollyBy < -1.0)
+    {
+        dollyBy = -1.0;
+    }
+
     dollyBy *= m_centerOfInterest;
     const V3d newEye = eye + ( dollyBy * v );
 
@@ -284,26 +300,26 @@ void GLCamera::rotate( const V2d &point,
 std::string GLCamera::RIB() const
 {
     std::ostringstream cameraStream;
-    cameraStream << "Format " 
-                 << ( int )m_size[0] 
+    cameraStream << "Format "
+                 << ( int )m_size[0]
                  << ( int )m_size[1] << "1\n"
-                 << "Clipping " 
-                 << ( float )m_clip[0] 
+                 << "Clipping "
+                 << ( float )m_clip[0]
                  << ( float )m_clip[1] << "\n"
-                 << "Projection \"perspective\" \"fov\" [" 
+                 << "Projection \"perspective\" \"fov\" ["
                  << ( float )m_fovy << "]\n"
                  << "Scale 1 1 -1\n"
                  << "Scale "
                  << ( float )( 1.0/m_scale[0] ) << " "
                  << ( float )( 1.0/m_scale[1] ) << " "
                  << ( float )( 1.0/m_scale[2] ) << "\n"
-                 << "Rotate  " 
-                 << ( float )( -m_rotation[2] ) << "0 0 1\n"
-                 << "Rotate  " 
+                 << "Rotate  "
                  << ( float )( -m_rotation[0] ) << "1 0 0\n"
-                 << "Rotate  " 
+                 << "Rotate  "
                  << ( float )( -m_rotation[1] ) << "0 1 0\n"
-                 << "Translate " 
+                 << "Rotate  "
+                 << ( float )( -m_rotation[2] ) << "0 0 1\n"
+                 << "Translate "
                  << ( float )( -m_translation[0] )
                  << ( float )( -m_translation[1] )
                  << ( float )( -m_translation[2] )

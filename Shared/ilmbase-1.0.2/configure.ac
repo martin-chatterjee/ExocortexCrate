@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(IlmBase, 1.0.2)
-AC_SUBST(ILMBASE_VERSION, 1.0.2)
+AC_INIT(IlmBase, 1.0.3)
+AC_SUBST(ILMBASE_VERSION, 1.0.3)
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR(ImathTest/main.cpp)
 AM_CONFIG_HEADER(config/IlmBaseConfig.h)
@@ -8,7 +8,7 @@ AM_INIT_AUTOMAKE(1.6.3)  dnl Require automake 1.6.3 or better
 AM_MAINTAINER_MODE
 
 
-LIBTOOL_CURRENT=6
+LIBTOOL_CURRENT=7
 LIBTOOL_REVISION=0
 LIBTOOL_AGE=0
 LIBTOOL_VERSION=$LIBTOOL_CURRENT:$LIBTOOL_REVISION:$LIBTOOL_AGE
@@ -57,7 +57,7 @@ fi
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(limits.h unistd.h)
+AC_CHECK_HEADERS(limits.h unistd.h ucontext.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -81,6 +81,34 @@ AC_DEFINE(HAVE_COMPLETE_IOMANIP) complete_iomanip=yes)
 AC_MSG_RESULT($complete_iomanip)
 AC_LANG_RESTORE
 
+dnl --enable-large-stack
+case "$host" in
+*linux*)
+  AC_ARG_ENABLE(large-stack,
+		AC_HELP_STRING([--enable-large-stack],
+			       [enable optimizations for systems that support
+			       large stack sizes [[default=yes]]]),
+		[large_stack="${enableval}"],
+		[large_stack=yes])
+  ;;
+*)
+  AC_ARG_ENABLE(large-stack,
+		AC_HELP_STRING([--enable-large-stack],
+			       [enable optimizations for systems that support
+			       large stack sizes [[default=no]]]),
+		[large_stack="${enableval}"],
+		[large_stack=no])
+  ;;
+esac
+
+if test "x${large_stack}" != xno ; then
+    AC_DEFINE(ILMBASE_HAVE_LARGE_STACK)
+fi
+
+dnl Define the version string
+AC_DEFINE_UNQUOTED(ILMBASE_VERSION_STRING, "${VERSION}")
+AC_DEFINE_UNQUOTED(ILMBASE_PACKAGE_STRING, "${PACKAGE_STRING}")
+
 
 AC_MSG_CHECKING(for gcc optimization flags)
 old_cflags=$CFLAGS
@@ -95,7 +123,6 @@ dnl Platform-specific stuff
 case "$host" in
 *darwin*) 
   dnl Compiler flags for all OS X builds
-  CXXFLAGS="$CXXFLAGS -Wno-long-double"
 
   dnl OSX architectures specification
   dnl NOTE: multiple architectures requires --disable-dependency-tracking
@@ -158,6 +185,7 @@ AM_CXXFLAGS="$EXTRA_OPT_CFLAGS"
 
 AC_SUBST(AM_CFLAGS)
 AC_SUBST(AM_CXXFLAGS)
+AC_SUBST(HAVE_UCONTEXT_H)
 
 
 AC_OUTPUT([
@@ -167,6 +195,7 @@ config/Makefile
 Half/Makefile
 HalfTest/Makefile
 Iex/Makefile
+IexMath/Makefile
 IexTest/Makefile
 IlmThread/Makefile
 Imath/Makefile
@@ -182,6 +211,7 @@ Summary for IlmBase features:
 OS X architectures                              $osx_arch
 OS X SDK                                        $osx_sdk
 OS X two-way universal build (deprecated)       $build_osxuniversal
+enable large stack optimizations                $large_stack
 ---------------------------------------------
   ])
 else
@@ -189,7 +219,7 @@ else
 ---------------------------------------------
 Summary for IlmBase features:
 
-No variable options in this package.  Configure completed successfully.
+enable large stack optimizations                $large_stack
 ---------------------------------------------
   ])
 fi

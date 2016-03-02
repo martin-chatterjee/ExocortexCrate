@@ -38,8 +38,10 @@ host_triplet = @host@
 subdir = vc
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/threads.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/m4/threads.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -71,31 +73,40 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
-ECHO = @ECHO@
+DSYMUTIL = @DSYMUTIL@
+DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-F77 = @F77@
-FFLAGS = @FFLAGS@
+FGREP = @FGREP@
+GREP = @GREP@
+HAVE_UCONTEXT_H = @HAVE_UCONTEXT_H@
 ILMBASE_VERSION = @ILMBASE_VERSION@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_VERSION = @LIBTOOL_VERSION@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
 MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
+NM = @NM@
+NMEDIT = @NMEDIT@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -115,7 +126,13 @@ VERSION = @VERSION@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
-ac_ct_F77 = @ac_ct_F77@
+ac_ct_DSYMUTIL = @ac_ct_DSYMUTIL@
+ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
+ac_ct_LIPO = @ac_ct_LIPO@
+ac_ct_NMEDIT = @ac_ct_NMEDIT@
+ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
+ac_ct_OTOOL = @ac_ct_OTOOL@
+ac_ct_OTOOL64 = @ac_ct_OTOOL64@
 ac_ct_RANLIB = @ac_ct_RANLIB@
 ac_ct_STRIP = @ac_ct_STRIP@
 acx_pthread_config = @acx_pthread_config@
@@ -147,6 +164,7 @@ install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localstatedir = @localstatedir@
+lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -168,58 +186,31 @@ EXTRA_DIST = \
         createDLL/createDLL.cpp \
         vc7/IlmBase/IlmBase.sln \
         vc7/IlmBase/Half/Half.vcproj \
-        vc7/IlmBase/Half/Debug/.cvsignore \
-        vc7/IlmBase/Half/Release/.cvsignore \
         vc7/IlmBase/HalfTest/HalfTest.vcproj \
-        vc7/IlmBase/HalfTest/Debug/.cvsignore \
-        vc7/IlmBase/HalfTest/Release/.cvsignore \
         vc7/IlmBase/Iex/Iex.vcproj \
-        vc7/IlmBase/Iex/Debug/.cvsignore \
-        vc7/IlmBase/Iex/Release/.cvsignore \
         vc7/IlmBase/IexTest/IexTest.vcproj \
-        vc7/IlmBase/IexTest/Debug/.cvsignore \
-        vc7/IlmBase/IexTest/Release/.cvsignore \
         vc7/IlmBase/IlmThread/IlmThread.vcproj \
-        vc7/IlmBase/IlmThread/Debug/.cvsignore \
-        vc7/IlmBase/IlmThread/Release/.cvsignore \
         vc7/IlmBase/Imath/Imath.vcproj \
-        vc7/IlmBase/Imath/Debug/.cvsignore \
-        vc7/IlmBase/Imath/Release/.cvsignore \
         vc7/IlmBase/ImathTest/ImathTest.vcproj \
-        vc7/IlmBase/ImathTest/Debug/.cvsignore \
-        vc7/IlmBase/ImathTest/Release/.cvsignore \
         vc7/IlmBase/createDLL/createDLL.vcproj \
-        vc7/IlmBase/createDLL/Debug/.cvsignore \
-        vc7/IlmBase/createDLL/Release/.cvsignore \
-        vc7/IlmBase/debug/.cvsignore \
-        vc7/IlmBase/release/.cvsignore \
         vc8/IlmBase/IlmBase.sln \
         vc8/IlmBase/Half/Half.vcproj \
-        vc8/IlmBase/Half/Debug/.cvsignore \
-        vc8/IlmBase/Half/Release/.cvsignore \
         vc8/IlmBase/HalfTest/HalfTest.vcproj \
-        vc8/IlmBase/HalfTest/Debug/.cvsignore \
-        vc8/IlmBase/HalfTest/Release/.cvsignore \
         vc8/IlmBase/Iex/Iex.vcproj \
-        vc8/IlmBase/Iex/Debug/.cvsignore \
-        vc8/IlmBase/Iex/Release/.cvsignore \
         vc8/IlmBase/IexTest/IexTest.vcproj \
-        vc8/IlmBase/IexTest/Debug/.cvsignore \
-        vc8/IlmBase/IexTest/Release/.cvsignore \
         vc8/IlmBase/IlmThread/IlmThread.vcproj \
-        vc8/IlmBase/IlmThread/Debug/.cvsignore \
-        vc8/IlmBase/IlmThread/Release/.cvsignore \
         vc8/IlmBase/Imath/Imath.vcproj \
-        vc8/IlmBase/Imath/Debug/.cvsignore \
-        vc8/IlmBase/Imath/Release/.cvsignore \
         vc8/IlmBase/ImathTest/ImathTest.vcproj \
-        vc8/IlmBase/ImathTest/Debug/.cvsignore \
-        vc8/IlmBase/ImathTest/Release/.cvsignore \
         vc8/IlmBase/createDLL/createDLL.vcproj \
-        vc8/IlmBase/createDLL/Debug/.cvsignore \
-        vc8/IlmBase/createDLL/Release/.cvsignore \
-        vc8/IlmBase/debug/.cvsignore \
-        vc8/IlmBase/release/.cvsignore
+        vc9/IlmBase/IlmBase.sln \
+        vc9/IlmBase/Half/Half.vcproj \
+        vc9/IlmBase/HalfTest/HalfTest.vcproj \
+        vc9/IlmBase/Iex/Iex.vcproj \
+        vc9/IlmBase/IexTest/IexTest.vcproj \
+        vc9/IlmBase/IlmThread/IlmThread.vcproj \
+        vc9/IlmBase/Imath/Imath.vcproj \
+        vc9/IlmBase/ImathTest/ImathTest.vcproj \
+        vc9/IlmBase/createDLL/createDLL.vcproj
 
 all: all-am
 
@@ -271,7 +262,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/createDLL $(distdir)/vc7/IlmBase $(distdir)/vc7/IlmBase/Half $(distdir)/vc7/IlmBase/Half/Debug $(distdir)/vc7/IlmBase/Half/Release $(distdir)/vc7/IlmBase/HalfTest $(distdir)/vc7/IlmBase/HalfTest/Debug $(distdir)/vc7/IlmBase/HalfTest/Release $(distdir)/vc7/IlmBase/Iex $(distdir)/vc7/IlmBase/Iex/Debug $(distdir)/vc7/IlmBase/Iex/Release $(distdir)/vc7/IlmBase/IexTest $(distdir)/vc7/IlmBase/IexTest/Debug $(distdir)/vc7/IlmBase/IexTest/Release $(distdir)/vc7/IlmBase/IlmThread $(distdir)/vc7/IlmBase/IlmThread/Debug $(distdir)/vc7/IlmBase/IlmThread/Release $(distdir)/vc7/IlmBase/Imath $(distdir)/vc7/IlmBase/Imath/Debug $(distdir)/vc7/IlmBase/Imath/Release $(distdir)/vc7/IlmBase/ImathTest $(distdir)/vc7/IlmBase/ImathTest/Debug $(distdir)/vc7/IlmBase/ImathTest/Release $(distdir)/vc7/IlmBase/createDLL $(distdir)/vc7/IlmBase/createDLL/Debug $(distdir)/vc7/IlmBase/createDLL/Release $(distdir)/vc7/IlmBase/debug $(distdir)/vc7/IlmBase/release $(distdir)/vc8/IlmBase $(distdir)/vc8/IlmBase/Half $(distdir)/vc8/IlmBase/Half/Debug $(distdir)/vc8/IlmBase/Half/Release $(distdir)/vc8/IlmBase/HalfTest $(distdir)/vc8/IlmBase/HalfTest/Debug $(distdir)/vc8/IlmBase/HalfTest/Release $(distdir)/vc8/IlmBase/Iex $(distdir)/vc8/IlmBase/Iex/Debug $(distdir)/vc8/IlmBase/Iex/Release $(distdir)/vc8/IlmBase/IexTest $(distdir)/vc8/IlmBase/IexTest/Debug $(distdir)/vc8/IlmBase/IexTest/Release $(distdir)/vc8/IlmBase/IlmThread $(distdir)/vc8/IlmBase/IlmThread/Debug $(distdir)/vc8/IlmBase/IlmThread/Release $(distdir)/vc8/IlmBase/Imath $(distdir)/vc8/IlmBase/Imath/Debug $(distdir)/vc8/IlmBase/Imath/Release $(distdir)/vc8/IlmBase/ImathTest $(distdir)/vc8/IlmBase/ImathTest/Debug $(distdir)/vc8/IlmBase/ImathTest/Release $(distdir)/vc8/IlmBase/createDLL $(distdir)/vc8/IlmBase/createDLL/Debug $(distdir)/vc8/IlmBase/createDLL/Release $(distdir)/vc8/IlmBase/debug $(distdir)/vc8/IlmBase/release
+	$(mkdir_p) $(distdir)/createDLL $(distdir)/vc7/IlmBase $(distdir)/vc7/IlmBase/Half $(distdir)/vc7/IlmBase/HalfTest $(distdir)/vc7/IlmBase/Iex $(distdir)/vc7/IlmBase/IexTest $(distdir)/vc7/IlmBase/IlmThread $(distdir)/vc7/IlmBase/Imath $(distdir)/vc7/IlmBase/ImathTest $(distdir)/vc7/IlmBase/createDLL $(distdir)/vc8/IlmBase $(distdir)/vc8/IlmBase/Half $(distdir)/vc8/IlmBase/HalfTest $(distdir)/vc8/IlmBase/Iex $(distdir)/vc8/IlmBase/IexTest $(distdir)/vc8/IlmBase/IlmThread $(distdir)/vc8/IlmBase/Imath $(distdir)/vc8/IlmBase/ImathTest $(distdir)/vc8/IlmBase/createDLL $(distdir)/vc9/IlmBase $(distdir)/vc9/IlmBase/Half $(distdir)/vc9/IlmBase/HalfTest $(distdir)/vc9/IlmBase/Iex $(distdir)/vc9/IlmBase/IexTest $(distdir)/vc9/IlmBase/IlmThread $(distdir)/vc9/IlmBase/Imath $(distdir)/vc9/IlmBase/ImathTest $(distdir)/vc9/IlmBase/createDLL
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

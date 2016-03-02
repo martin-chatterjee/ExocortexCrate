@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="Imath"
 	ProjectGUID="{39E34F88-DD2E-4A1C-96B7-624EA55FC1D7}"
+	RootNamespace="Imath"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -433,6 +434,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\Imath\ImathFrustum.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\Imath\ImathFrustumTest.h"
 				>
 			</File>
 			<File

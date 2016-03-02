@@ -14,3 +14,18 @@
 
 #define HAVE_POSIX_SEMAPHORES 1
 
+#define HAVE_UCONTEXT_H 1
+
+//
+// Define and set to 1 if the target system has support for large
+// stack sizes.
+//
+
+#define ILMBASE_HAVE_LARGE_STACK 1
+
+
+//
+// Version string for runtime access
+//
+#define ILMBASE_VERSION_STRING "1.0.3"
+#define ILMBASE_PACKAGE_STRING "IlmBase 1.0.3"

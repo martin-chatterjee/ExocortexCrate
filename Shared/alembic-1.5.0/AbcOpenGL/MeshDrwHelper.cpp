@@ -1,6 +1,6 @@
 //-*****************************************************************************
 //
-// Copyright (c) 2009-2012,
+// Copyright (c) 2009-2014,
 //  Sony Pictures Imageworks, Inc. and
 //  Industrial Light & Magic, a division of Lucasfilm Entertainment Company Ltd.
 //
@@ -237,7 +237,7 @@ void MeshDrwHelper::updateNormals( V3fArraySamplePtr iN )
 
     // Now see if we need to calculate normals.
     if ( ( m_meshN && iN == m_meshN ) ||
-         ( !iN && m_customN.size() > 0 ) )
+         ( isConstant() && m_customN.size() > 0 ) )
     {
         return;
     }
@@ -255,9 +255,6 @@ void MeshDrwHelper::updateNormals( V3fArraySamplePtr iN )
         m_customN.resize( numPoints );
         std::fill( m_customN.begin(), m_customN.end(), V3f( 0.0f ) );
 
-        //std::cout << "Recalcing normals for object: "
-        //          << m_host.name() << std::endl;
-
         for ( size_t tidx = 0; tidx < m_triangles.size(); ++tidx )
         {
             const Tri &tri = m_triangles[tidx];
@@ -269,7 +266,7 @@ void MeshDrwHelper::updateNormals( V3fArraySamplePtr iN )
             V3f AB = B - A;
             V3f AC = C - A;
 
-            V3f wN = AB.cross( AC );
+            V3f wN = AC.cross( AB );
             m_customN[tri[0]] += wN;
             m_customN[tri[1]] += wN;
             m_customN[tri[2]] += wN;
@@ -281,6 +278,74 @@ void MeshDrwHelper::updateNormals( V3fArraySamplePtr iN )
             m_customN[nidx].normalize();
         }
     }
+}
+
+//-*****************************************************************************
+void MeshDrwHelper::drawBounds( const DrawContext & iCtx ) const
+{
+    drawBoundingBox( m_bounds );
+}
+
+//-*****************************************************************************
+void drawBoundingBox( const Box3d bounds, const int mode )
+{
+    float min_x = bounds.min[0];
+    float min_y = bounds.min[1];
+    float min_z = bounds.min[2];
+    float max_x = bounds.max[0];
+    float max_y = bounds.max[1];
+    float max_z = bounds.max[2];
+    
+    float w = max_x - min_x;
+    float h = max_y - min_y;
+    float d = max_z - min_z;
+
+    glDisable( GL_LIGHTING );
+    
+    glEnable( GL_POINT_SMOOTH );
+    glPointSize( 1.0 );
+    glLineWidth( 1.0 );
+    
+    glBegin( mode );
+
+    glVertex3f(min_x, min_y, min_z);
+    glVertex3f(min_x+w, min_y, min_z);
+    glVertex3f(min_x, min_y, min_z);
+    glVertex3f(min_x, min_y+h, min_z);
+    glVertex3f(min_x, min_y, min_z);
+    glVertex3f(min_x, min_y, min_z+d);
+    glVertex3f(min_x+w, min_y, min_z);
+    glVertex3f(min_x+w, min_y+h, min_z);
+    glVertex3f(min_x+w, min_y+h, min_z);
+    glVertex3f(min_x, min_y+h, min_z);
+    glVertex3f(min_x, min_y, min_z+d);
+    glVertex3f(min_x+w, min_y, min_z+d);
+    glVertex3f(min_x+w, min_y, min_z+d);
+    glVertex3f(min_x+w, min_y, min_z);
+    glVertex3f(min_x, min_y, min_z+d);
+    glVertex3f(min_x, min_y+h, min_z+d);
+    glVertex3f(min_x, min_y+h, min_z+d);
+    glVertex3f(min_x, min_y+h, min_z);
+    glVertex3f(min_x+w, min_y+h, min_z);
+    glVertex3f(min_x+w, min_y+h, min_z+d);
+    glVertex3f(min_x+w, min_y, min_z+d);
+    glVertex3f(min_x+w, min_y+h, min_z+d);
+    glVertex3f(min_x, min_y+h, min_z+d);
+    glVertex3f(min_x+w, min_y+h, min_z+d);
+
+    float cx = bounds.center()[0];
+    float cy = bounds.center()[1];
+    float cz = bounds.center()[2];
+
+    glVertex3f(cx-0.1, cy, cz);
+    glVertex3f(cx+0.1, cy, cz);
+    glVertex3f(cx, cy-0.1, cz);
+    glVertex3f(cx, cy+0.1, cz);
+    glVertex3f(cx, cy, cz-0.1);
+    glVertex3f(cx, cy, cz+0.1);
+
+    glEnd();
+    glEnable( GL_LIGHTING );
 }
 
 //-*****************************************************************************
@@ -356,7 +421,7 @@ void MeshDrwHelper::draw( const DrawContext & iCtx ) const
         {
             V3f AB = vertB - vertA;
             V3f AC = vertC - vertA;
-            V3f N = AB.cross( AC );
+            V3f N = AC.cross( AB );
             if ( N.length() > 1.0e-4f )
             {
                 N.normalize();
