@@ -35,8 +35,8 @@ ELSEIF( UNIX )
 ENDIF()
 
 # ilmbase
-ADD_EXECUTABLE(ilmbase_toFloat ${CMAKE_CURRENT_SOURCE_DIR}/Half/toFloat/toFloat.cpp)
-ADD_EXECUTABLE(ilmbase_eLut ${CMAKE_CURRENT_SOURCE_DIR}/Half/eLut/eLut.cpp)
+ADD_EXECUTABLE(ilmbase_toFloat ${CMAKE_CURRENT_SOURCE_DIR}/Half/toFloat.cpp)
+ADD_EXECUTABLE(ilmbase_eLut ${CMAKE_CURRENT_SOURCE_DIR}/Half/eLut.cpp)
 
 set_property(TARGET "ilmbase_toFloat" PROPERTY FOLDER "${IlmBaseFolder}")
 set_property(TARGET "ilmbase_eLut" PROPERTY FOLDER "${IlmBaseFolder}")
